@@ -21,5 +21,4 @@ public class AutoParts {
     private String partName;
     private Float price;
     private String From;
-
 }
