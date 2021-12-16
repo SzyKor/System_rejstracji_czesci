@@ -13,7 +13,7 @@ import javax.persistence.Id;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class Client {
+public class Driver {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +21,5 @@ public class Client {
     private String name;
     private String email;
     private Integer phoneNumer;
-    private String address;
-    private Integer zipCode;
-
 
 }
