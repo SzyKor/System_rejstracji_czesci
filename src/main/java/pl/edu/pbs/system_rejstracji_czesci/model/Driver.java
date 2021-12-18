@@ -20,6 +20,6 @@ public class Driver {
     private Long id;
     private String name;
     private String email;
-    private Integer phoneNumer;
+    private Integer phoneNumber;
 
 }
