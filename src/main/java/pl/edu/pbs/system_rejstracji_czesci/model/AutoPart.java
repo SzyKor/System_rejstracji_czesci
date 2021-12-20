@@ -13,12 +13,16 @@ import javax.persistence.Id;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class AutoParts {
+public class AutoPart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int autoPartId;
     private String partName;
-    private Float price;
-    private String From;
+    private String partBrand;
+    private String partModel;
+    private String partFromWho;
+    private String partFromWhere;
+    private float partPrice;
+    private boolean partDamaged;
 }

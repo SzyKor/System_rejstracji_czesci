@@ -13,16 +13,20 @@ import javax.persistence.Id;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class Client {
+public class Auto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private String email;
-    private Integer phoneNumer;
-    private String address;
-    private Integer zipCode;
-
-
+    private int autoId;
+    private String autoBrand;
+    private String autoModel;
+    private String autoFuelType;
+    private String autoBodyType;
+    private String autoFromWho;
+    private String autoFromWhere;
+    private int autoYear;
+    private int autoMileage;
+    private int autoHP;
+    private float autoPrice;
+    private boolean autoDamaged;
 }
