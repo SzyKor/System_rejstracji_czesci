@@ -17,9 +17,9 @@ public class Driver {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long driverId;
+    private int driverId;
     private String driverName;
     private String driverEmail;
-    private Integer driverPhoneNumber;
+    private int driverPhoneNumber;
 
 }
