@@ -22,12 +22,11 @@ export class MainUi extends LitElement {
     return html`
 <vaadin-vertical-layout style="width: 100%; height: 100%;">
  <vaadin-horizontal-layout theme="spacing" style="align-items: flex-end;">
-  <vaadin-combo-box id="brandCB" label="Select brand"></vaadin-combo-box>
-  <vaadin-combo-box id="modelCB" label="Select model"></vaadin-combo-box>
-  <vaadin-combo-box id="fuelTypeCB" label="Select fuel"></vaadin-combo-box>
-  <vaadin-combo-box id="bodyTypeCB" label="Select body"></vaadin-combo-box>
-  <vaadin-combo-box id="yearCB" label="Select year"></vaadin-combo-box>
-  <vaadin-combo-box id="horsePowerCB" label="Select HP"></vaadin-combo-box>
+   <vaadin-combo-box id="nameCB" label="Nazwa części"></vaadin-combo-box>
+  <vaadin-combo-box id="brandCB" label="Marka"></vaadin-combo-box>
+  <vaadin-combo-box id="modelCB" label="Model"></vaadin-combo-box>
+  <vaadin-combo-box id="damagedCB" label="Czy uszkodzona"></vaadin-combo-box>
+  <vaadin-combo-box id="priceCB" label="Cena"></vaadin-combo-box>
   <vaadin-button id="testBT">
     Button 
   </vaadin-button>

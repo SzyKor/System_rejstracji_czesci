@@ -18,8 +18,7 @@ public class AutoService {
     private DriverRepository driverRepository;
 
     public List<Auto> getAllAutos(){
-        return Arrays.asList(new Auto(1, "Skoda", "Octavia", "Diesel", "Hatchback", "Driver1", "Czechy", 2003, 200000, 99, 4000, false));
-        //return autoRepository.findAll();
+        return autoRepository.findAll();
     }
 
     public Optional<Auto> getAutoById(int autoId){
@@ -28,25 +27,31 @@ public class AutoService {
 
     public Optional<Driver> getDriverById(int driverId){ return driverRepository.findById(driverId); }
 
-    //TODO 1.Funkcje zwracająca listę list wszystkich AutoBrand, AutoModel, autoFuelType, autoBodyType, autoYear, autoHP
-    public List<String> getAutoBrands(){
-        return Arrays.asList("Skoda", "Volvo");
+//    public List<String> getAutoBrands(){
 //        return getAllAutos().stream()
 //                .map(Auto::getAutoBrand)
 //                .distinct()
 //                .collect(Collectors.toList());
-    }
-
-    public List<String> getAutoModelsByBrand(String AutoBrand){
-        return autoRepository.findAutosByAutoBrand(AutoBrand).stream()
-                .map(Auto::getAutoModel)
-                .collect(Collectors.toList());
-    }
-
-//    public List<String> getAutoFuelTypesByModel(String AutoModel){
-//        return getAllAutos().stream()
-//                .filter(auto -> !Objects.equals(auto.getAutoModel(), AutoBrand))
-//                .map(Auto::getAutoBrand)
+//    }
+//
+//    public List<String> getAutoModelsByBrand(String AutoBrand){
+//        return autoRepository.findAutosByAutoBrand(AutoBrand).stream()
+//                .map(Auto::getAutoModel)
+//                .distinct()
+//                .collect(Collectors.toList());
+//    }
+//
+//    public List<String> getAutoBodyByBrandAndModel(String AutoBrand, String AutoModel){
+//        return autoRepository.findAutosByAutoBrandAndAutoModel(AutoBrand, AutoModel).stream()
+//                .map(Auto::getAutoBodyType)
+//                .distinct()
+//                .collect(Collectors.toList());
+//    }
+//
+//    public List<String> getAutoFuelTypesByBrandAndModel(String AutoBrand, String AutoModel){
+//        return autoRepository.findAutosByAutoBrandAndAutoModel(AutoBrand, AutoModel).stream()
+//                .map(Auto::getAutoFuelType)
+//                .distinct()
 //                .collect(Collectors.toList());
 //    }
 }

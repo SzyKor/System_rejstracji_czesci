@@ -8,12 +8,15 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.littemplate.LitTemplate;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.template.Id;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
-import pl.edu.pbs.system_rejstracji_czesci.model.Auto;
+import pl.edu.pbs.system_rejstracji_czesci.model.AutoPart;
+import pl.edu.pbs.system_rejstracji_czesci.service.AutoPartService;
 import pl.edu.pbs.system_rejstracji_czesci.service.AutoService;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * A Designer generated component for the main-ui template.
@@ -29,50 +32,84 @@ public class MainUi extends LitTemplate {
     @Id("testBT")
     private Button testBT;
     @Id("grid")
-    private Grid<Auto> grid;
+    private Grid<AutoPart> grid;
+    @Id("nameCB")
+    private ComboBox<String> nameCB;
     @Id("brandCB")
     private ComboBox<String> brandCB;
-
-    private final AutoService autoService;
     @Id("modelCB")
     private ComboBox<String> modelCB;
-    @Id("fuelTypeCB")
-    private ComboBox<String> fuelTypeCB;
-    @Id("bodyTypeCB")
-    private ComboBox<String> bodyTypeCB;
-    @Id("yearCB")
-    private ComboBox<String> yearCB;
-    @Id("horsePowerCB")
-    private ComboBox<String> horsePowerCB;
+    @Id("priceCB")
+    private ComboBox<Float> priceCB;
+    @Id("damagedCB")
+    private ComboBox<String> damagedCB;
 
-    public MainUi(AutoService autoService) {
+
+    private final AutoService autoService;
+    private final AutoPartService autoPartService;
+    private List<AutoPart> autoPartsList;
+
+    public MainUi(AutoService autoService, AutoPartService autoPartService) {
+        this.autoPartService = autoPartService;
         this.autoService = autoService;
-        //TODO 2.Przerobić grid na wyświetlanie AutoPart po wyszukaniu parametrów w CB na górze
-        grid.addColumn(Auto::getAutoBrand).setHeader("Brand");
-        grid.addColumn(Auto::getAutoBodyType).setHeader("BodyType");
-        grid.addColumn(Auto::getAutoHP).setHeader("getAutoHP");
-        grid.addColumn(Auto::getAutoFuelType).setHeader("getAutoFuelType");
+
+        autoPartsList = autoPartService.getAllAutoParts();
+
+        grid.addColumn(AutoPart::getPartName).setHeader("Nazwa części");
+        grid.addColumn(AutoPart::getPartBrand).setHeader("Marka części");
+        grid.addColumn(AutoPart::getPartModel).setHeader("Model części");
+        grid.addColumn(AutoPart::isPartDamaged).setHeader("Uszkodzona");
+        grid.addColumn(AutoPart::getPartPrice).setHeader("Wartość");
+        grid.addColumn(AutoPart::getPartFromWhere).setHeader("Skąd");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         updateGrid();
 
-        brandCB.setItems(autoService.getAutoBrands());
+        nameCB.setItems(autoPartsList.stream().map(AutoPart::getPartName).distinct().collect(Collectors.toList()));
+        brandCB.setItems(autoPartsList.stream().map(AutoPart::getPartBrand).distinct().collect(Collectors.toList()));
+        modelCB.setItems(autoPartsList.stream().map(AutoPart::getPartModel).distinct().collect(Collectors.toList()));
+        priceCB.setItems(autoPartsList.stream().map(AutoPart::getPartPrice).distinct().collect(Collectors.toList()));
+        damagedCB.setItems("Tak", "Nie");
     }
 
     private void updateGrid(){
-        grid.setItems(autoService.getAllAutos());
+        grid.setItems(autoPartsList);
     }
 
     @PostConstruct
     private void init() {
-        //TODO 1. ogarnięcie tego do współpracy z autoService
-        testBT.addClickListener(event -> {
-            Notification.show("Działa!");
-            autoService.getAllAutos();
-        });
-        brandCB.addValueChangeListener(event -> {
-            Notification.show("Działa!");
-            modelCB.setItems(autoService.getAutoModelsByBrand(brandCB.getValue()));
-        });
+        testBT.addClickListener(event -> Notification.show("Działa!"));
+        nameCB.addValueChangeListener(event -> refreshAutoPartsList());
+        brandCB.addValueChangeListener(event -> refreshAutoPartsList());
+        modelCB.addValueChangeListener(event -> refreshAutoPartsList());
+        priceCB.addValueChangeListener(event -> refreshAutoPartsList());
+        damagedCB.addValueChangeListener(event -> refreshAutoPartsList());
+    }
+
+    private void refreshAutoPartsList(){
+        boolean isName = nameCB.getValue() != null;
+        boolean isBrand = brandCB.getValue() != null;
+        boolean isModel = modelCB.getValue() != null;
+        boolean isPrice = priceCB.getValue() != null;
+        boolean isDamageSelected = damagedCB != null;
+        boolean isDamaged = Objects.equals(damagedCB.getValue(), "Tak");
+        autoPartsList = autoPartService.getAllAutoParts();
+        //if (!isName && !isBrand && !isModel && !isPrice) return;
+        if(isName){
+            autoPartsList = autoPartsList.stream().filter(auto -> Objects.equals(auto.getPartName(), nameCB.getValue())).collect(Collectors.toList());
+        }
+        if(isBrand){
+            autoPartsList = autoPartsList.stream().filter(auto -> Objects.equals(auto.getPartBrand(), brandCB.getValue())).collect(Collectors.toList());
+        }
+        if(isModel){
+            autoPartsList = autoPartsList.stream().filter(auto -> Objects.equals(auto.getPartModel(), modelCB.getValue())).collect(Collectors.toList());
+        }
+        if(isPrice){
+            autoPartsList = autoPartsList.stream().filter(auto -> auto.getPartPrice() == priceCB.getValue()).collect(Collectors.toList());
+        }
+        if(isDamageSelected){
+            autoPartsList = autoPartsList.stream().filter(auto -> auto.isPartDamaged() == isDamaged).collect(Collectors.toList());
+        }
+        updateGrid();
     }
 }

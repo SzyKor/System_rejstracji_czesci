@@ -2,6 +2,7 @@ package pl.edu.pbs.system_rejstracji_czesci.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.edu.pbs.system_rejstracji_czesci.model.Auto;
 import pl.edu.pbs.system_rejstracji_czesci.model.AutoPart;
 import pl.edu.pbs.system_rejstracji_czesci.model.AutoPartBto;
 import pl.edu.pbs.system_rejstracji_czesci.repository.AutoPartRepository;
@@ -17,6 +18,10 @@ public class AutoPartService {
     public List<AutoPart> getAllAutoParts(){
         return autoPartRepository.findAll();
     }
+
+//    public List<AutoPart> getAutoPartsToAutos(List<Auto> Autos){
+//
+//    }
 
     public Optional<AutoPart> getAutoPartByName(String partName){
         return autoPartRepository.findFirstByPartName(partName);

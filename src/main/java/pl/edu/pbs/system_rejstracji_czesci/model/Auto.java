@@ -1,13 +1,11 @@
 package pl.edu.pbs.system_rejstracji_czesci.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Data
 @Entity
@@ -29,4 +27,13 @@ public class Auto {
     private int autoHP;
     private float autoPrice;
     private boolean autoDamaged;
+//    @ManyToMany(
+//            cascade = CascadeType.ALL,
+//            fetch = FetchType.EAGER
+//    )
+//    @JoinTable(
+//            name = "auto_to_autopart",
+//            joinColumns = @JoinColumn(name = "autoId"),
+//            inverseJoinColumns = @JoinColumn(name = "autoPartId")
+//    )
 }
