@@ -6,7 +6,6 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.littemplate.LitTemplate;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.template.Id;
 import com.vaadin.flow.router.Route;
 import pl.edu.pbs.system_rejstracji_czesci.model.AutoPart;
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
  * does not overwrite or otherwise change this file.
  */
 @Tag("main-ui")
-@JsModule("./main-ui.ts")
+@JsModule("./views/main-ui.ts")
 @Route("")
 public class MainUi extends LitTemplate {
 
@@ -43,15 +42,17 @@ public class MainUi extends LitTemplate {
     private ComboBox<Float> priceCB;
     @Id("damagedCB")
     private ComboBox<String> damagedCB;
+    @Id("form")
+    private AddPartForm form;
+    @Id("addPartButton")
+    private Button addPartButton;
 
-
-    private final AutoService autoService;
     private final AutoPartService autoPartService;
     private List<AutoPart> autoPartsList;
 
+
     public MainUi(AutoService autoService, AutoPartService autoPartService) {
         this.autoPartService = autoPartService;
-        this.autoService = autoService;
 
         autoPartsList = autoPartService.getAllAutoParts();
 
@@ -78,12 +79,53 @@ public class MainUi extends LitTemplate {
 
     @PostConstruct
     private void init() {
-        testBT.addClickListener(event -> Notification.show("Działa!"));
+        testBT.addClickListener(event -> {
+            nameCB.setValue(null);
+            brandCB.setValue(null);
+            modelCB.setValue(null);
+            priceCB.setValue(null);
+            damagedCB.setValue(null);
+        });
         nameCB.addValueChangeListener(event -> refreshAutoPartsList());
         brandCB.addValueChangeListener(event -> refreshAutoPartsList());
         modelCB.addValueChangeListener(event -> refreshAutoPartsList());
         priceCB.addValueChangeListener(event -> refreshAutoPartsList());
         damagedCB.addValueChangeListener(event -> refreshAutoPartsList());
+
+        grid.asSingleSelect().addValueChangeListener(event -> openContactEditor(event.getValue()));
+
+        closeContactEditor();
+        form.addListener(AddPartForm.SaveEvent.class, this::saveAutoPart);
+        form.addListener(AddPartForm.DeleteEvent.class, this::deleteAutoPart);
+        form.addListener(AddPartForm.CloseEvent.class, e -> closeContactEditor());
+
+        addPartButton.addClickListener(event -> openContactEditor(new AutoPart()));
+    }
+
+    private void openContactEditor(AutoPart autoPart) {
+        if(autoPart == null){
+            closeContactEditor();
+        } else{
+            form.setAutoPart(autoPart);
+            form.setVisible(true);
+        }
+    }
+
+    private void saveAutoPart(AddPartForm.SaveEvent event){
+        autoPartService.saveAutoPart(event.getAutoPart());
+        refreshAutoPartsList();
+        closeContactEditor();
+    }
+
+    private void deleteAutoPart(AddPartForm.DeleteEvent event){
+        autoPartService.deleteAutoPart(event.getAutoPart());
+        refreshAutoPartsList();
+        closeContactEditor();
+    }
+
+    private void closeContactEditor(){
+        form.setVisible(false);
+        grid.asSingleSelect().clear();
     }
 
     private void refreshAutoPartsList(){
@@ -91,7 +133,7 @@ public class MainUi extends LitTemplate {
         boolean isBrand = brandCB.getValue() != null;
         boolean isModel = modelCB.getValue() != null;
         boolean isPrice = priceCB.getValue() != null;
-        boolean isDamageSelected = damagedCB != null;
+        boolean isDamageSelected = damagedCB.getValue() != null;
         boolean isDamaged = Objects.equals(damagedCB.getValue(), "Tak");
         autoPartsList = autoPartService.getAllAutoParts();
         //if (!isName && !isBrand && !isModel && !isPrice) return;
