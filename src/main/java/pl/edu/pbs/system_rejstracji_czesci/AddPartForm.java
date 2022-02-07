@@ -5,17 +5,28 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.littemplate.LitTemplate;
 import com.vaadin.flow.component.template.Id;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.Result;
+import com.vaadin.flow.data.binder.ValueContext;
+import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.data.converter.StringToFloatConverter;
+import com.vaadin.flow.data.converter.StringToIntegerConverter;
+import com.vaadin.flow.function.SerializableConsumer;
+import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 import pl.edu.pbs.system_rejstracji_czesci.model.AutoPart;
+import pl.edu.pbs.system_rejstracji_czesci.model.Driver;
+import pl.edu.pbs.system_rejstracji_czesci.service.DriverService;
+
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * A Designer generated component for the add-part-form template.
@@ -34,8 +45,6 @@ public class AddPartForm extends LitTemplate {
     private TextField partBrand;
     @Id("partModel")
     private TextField partModel;
-    @Id("partFromWho")
-    private TextField partFromWho;
     @Id("partFromWhere")
     private TextField partFromWhere;
     @Id("partDamaged")
@@ -48,20 +57,29 @@ public class AddPartForm extends LitTemplate {
     private Button closeFormButton;
     @Id("deletePartButton")
     private Button deletePartButton;
+    @Id("partFromWho")
+    private ComboBox<Driver> partFromWho;
 
     Binder<AutoPart> binder = new BeanValidationBinder<>(AutoPart.class);
-
+    DriverService driverService;
     /**
      * Creates a new AddPartForm.
      */
-    public AddPartForm() {
+    public AddPartForm(DriverService driverService) {
+        this.driverService = driverService;
         savePartButton.addClickListener(event -> validateAndSave());
         deletePartButton.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
         closeFormButton.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
+        partFromWho.setItems(driverService.getAllDrivers());
+        partFromWho.setItemLabelGenerator(Driver::getDriverName);
+
         binder.forField(partPrice)
-                .withConverter(new StringToFloatConverter(""))
+                .withConverter(new StringToFloatConverter("Failed to convert to float"))
                 .bind(AutoPart::getPartPrice, AutoPart::setPartPrice);
+        binder.forField(partFromWho)
+                .withConverter(new DriverToIntConverter())
+                .bind(AutoPart::getPartFromWho, AutoPart::setPartFromWho);
 
         binder.bindInstanceFields(this);
     }
@@ -110,6 +128,23 @@ public class AddPartForm extends LitTemplate {
 
     public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType, ComponentEventListener<T> listener){
         return getEventBus().addListener(eventType, listener);
+    }
+
+    public class DriverToIntConverter implements Converter<Driver, Integer>{
+
+        @Override
+        public Result<Integer> convertToModel(Driver driver, ValueContext valueContext) {
+            if(driver == null){
+                return Result.error("Driver can not be null");
+            }
+            return Result.ok(driver.getDriverId());
+        }
+
+        @Override
+        public Driver convertToPresentation(Integer integer, ValueContext valueContext) {
+            Optional<Driver> driver = driverService.getDriverById(integer);
+            return driver.orElse(null);
+        }
     }
 }
 

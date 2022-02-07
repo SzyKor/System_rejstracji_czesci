@@ -51,7 +51,7 @@ public class MainUi extends LitTemplate {
     private List<AutoPart> autoPartsList;
 
 
-    public MainUi(AutoService autoService, AutoPartService autoPartService) {
+    public MainUi(AutoPartService autoPartService) {
         this.autoPartService = autoPartService;
 
         autoPartsList = autoPartService.getAllAutoParts();

@@ -21,7 +21,7 @@ public class AutoPart {
     private String partName;
     private String partBrand;
     private String partModel;
-    private String partFromWho;
+    private Integer partFromWho;
     private String partFromWhere;
     private float partPrice;
     private boolean partDamaged;

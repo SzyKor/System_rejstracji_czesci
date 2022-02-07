@@ -18,20 +18,20 @@ export class AddPartForm extends LitElement {
  <vaadin-text-field label="Nazwa części" placeholder="Podaj nazwę części" id="partName"></vaadin-text-field>
  <vaadin-text-field label="Marka części" placeholder="Podaj markę części" id="partBrand"></vaadin-text-field>
  <vaadin-text-field label="Model części" placeholder="Podaj model części" id="partModel"></vaadin-text-field>
- <vaadin-text-field label="Od kogo" placeholder="Podaj dostawcę" id="partFromWho"></vaadin-text-field>
+ <vaadin-combo-box id="partFromWho" label="Od kogo"></vaadin-combo-box>
  <vaadin-text-field label="Skąd" placeholder="Podaj pochodzenie części" id="partFromWhere"></vaadin-text-field>
  <vaadin-text-field label="Cena" placeholder="Podaj cenę do sprzedaży" id="partPrice"></vaadin-text-field>
  <vaadin-checkbox id="partDamaged" style="margin: var(--lumo-space-xs);">
-  Uszkodzona
+   Uszkodzona 
  </vaadin-checkbox>
  <vaadin-button id="savePartButton" theme="primary">
-  Zapisz
+   Zapisz 
  </vaadin-button>
  <vaadin-button theme="error" id="deletePartButton">
-  Usuń
+   Usuń 
  </vaadin-button>
  <vaadin-button id="closeFormButton">
-  Anuluj
+   Anuluj 
  </vaadin-button>
 </vaadin-form-layout>
 `;
