@@ -21,8 +21,18 @@ export class AddPartForm extends LitElement {
  <vaadin-combo-box id="partFromWho" label="Od kogo"></vaadin-combo-box>
  <vaadin-text-field label="Skąd" placeholder="Podaj pochodzenie części" id="partFromWhere"></vaadin-text-field>
  <vaadin-text-field label="Cena" placeholder="Podaj cenę do sprzedaży" id="partPrice"></vaadin-text-field>
- <vaadin-checkbox id="partDamaged" style="margin: var(--lumo-space-xs);" label="Uszkodzona">
-   Uszkodzona 
+ <label draggable="true" vaadin-dnd-layout-item="true">
+  <designer-text>
+   <designer-text> 
+   </designer-text>
+  </designer-text></label>
+ <label draggable="true" vaadin-dnd-layout-item="true" style="margin: var(--lumo-space-s); margin-right: 0; margin-bottom: 0; margin-left: 0;">
+  <designer-text>
+    Uszkodzona 
+  </designer-text></label>
+ <label draggable="true" vaadin-dnd-layout-item="true"></label>
+ <vaadin-checkbox id="partDamaged" label="Uszkodzona">
+  Text
  </vaadin-checkbox>
  <vaadin-button id="savePartButton" theme="primary">
    Zapisz 
@@ -34,6 +44,7 @@ export class AddPartForm extends LitElement {
    Anuluj 
  </vaadin-button>
 </vaadin-form-layout>
+<label>Label</label>
 `;
   }
 
