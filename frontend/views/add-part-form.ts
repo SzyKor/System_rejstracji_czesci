@@ -21,7 +21,7 @@ export class AddPartForm extends LitElement {
  <vaadin-combo-box id="partFromWho" label="Od kogo"></vaadin-combo-box>
  <vaadin-text-field label="Skąd" placeholder="Podaj pochodzenie części" id="partFromWhere"></vaadin-text-field>
  <vaadin-text-field label="Cena" placeholder="Podaj cenę do sprzedaży" id="partPrice"></vaadin-text-field>
- <vaadin-checkbox id="partDamaged" style="margin: var(--lumo-space-xs);">
+ <vaadin-checkbox id="partDamaged" style="margin: var(--lumo-space-xs);" label="Uszkodzona">
    Uszkodzona 
  </vaadin-checkbox>
  <vaadin-button id="savePartButton" theme="primary">

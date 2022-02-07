@@ -9,8 +9,9 @@ import com.vaadin.flow.component.littemplate.LitTemplate;
 import com.vaadin.flow.component.template.Id;
 import com.vaadin.flow.router.Route;
 import pl.edu.pbs.system_rejstracji_czesci.model.AutoPart;
+import pl.edu.pbs.system_rejstracji_czesci.model.Driver;
 import pl.edu.pbs.system_rejstracji_czesci.service.AutoPartService;
-import pl.edu.pbs.system_rejstracji_czesci.service.AutoService;
+import pl.edu.pbs.system_rejstracji_czesci.service.DriverService;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 public class MainUi extends LitTemplate {
 
     @Id("testBT")
-    private Button testBT;
+    private Button filterResetButton;
     @Id("grid")
     private Grid<AutoPart> grid;
     @Id("nameCB")
@@ -42,17 +43,23 @@ public class MainUi extends LitTemplate {
     private ComboBox<Float> priceCB;
     @Id("damagedCB")
     private ComboBox<String> damagedCB;
-    @Id("form")
-    private AddPartForm form;
     @Id("addPartButton")
     private Button addPartButton;
+    @Id("AutoPartForm")
+    private AddPartForm autoPartForm;
+    @Id("DriverForm")
+    private AddDriverForm driverForm;
+    @Id("addDriverButton")
+    private Button addDriverButton;
 
     private final AutoPartService autoPartService;
     private List<AutoPart> autoPartsList;
 
+    private final DriverService driverService;
 
-    public MainUi(AutoPartService autoPartService) {
+    public MainUi(AutoPartService autoPartService, DriverService driverService) {
         this.autoPartService = autoPartService;
+        this.driverService = driverService;
 
         autoPartsList = autoPartService.getAllAutoParts();
 
@@ -79,12 +86,14 @@ public class MainUi extends LitTemplate {
 
     @PostConstruct
     private void init() {
-        testBT.addClickListener(event -> {
+        filterResetButton.addClickListener(event -> {
             nameCB.setValue(null);
             brandCB.setValue(null);
             modelCB.setValue(null);
             priceCB.setValue(null);
             damagedCB.setValue(null);
+            closeDriverEditor();
+            closeContactEditor();
         });
         nameCB.addValueChangeListener(event -> refreshAutoPartsList());
         brandCB.addValueChangeListener(event -> refreshAutoPartsList());
@@ -95,19 +104,37 @@ public class MainUi extends LitTemplate {
         grid.asSingleSelect().addValueChangeListener(event -> openContactEditor(event.getValue()));
 
         closeContactEditor();
-        form.addListener(AddPartForm.SaveEvent.class, this::saveAutoPart);
-        form.addListener(AddPartForm.DeleteEvent.class, this::deleteAutoPart);
-        form.addListener(AddPartForm.CloseEvent.class, e -> closeContactEditor());
+        driverForm.setVisible(false);
+
+        autoPartForm.addListener(AddPartForm.SaveEvent.class, this::saveAutoPart);
+        autoPartForm.addListener(AddPartForm.DeleteEvent.class, this::deleteAutoPart);
+        autoPartForm.addListener(AddPartForm.CloseEvent.class, e -> closeContactEditor());
+
+        driverForm.addListener(AddDriverForm.SaveEvent.class, this::saveDriver);
+        driverForm.addListener(AddDriverForm.DeleteEvent.class, this::deleteDriver);
+        driverForm.addListener(AddDriverForm.CloseEvent.class, e -> closeDriverEditor());
 
         addPartButton.addClickListener(event -> openContactEditor(new AutoPart()));
+        addDriverButton.addClickListener(event -> openDriverEditor(new Driver()));
     }
 
     private void openContactEditor(AutoPart autoPart) {
         if(autoPart == null){
             closeContactEditor();
         } else{
-            form.setAutoPart(autoPart);
-            form.setVisible(true);
+            driverForm.setVisible(false);
+            autoPartForm.setAutoPart(autoPart);
+            autoPartForm.setVisible(true);
+        }
+    }
+
+    private void openDriverEditor(Driver driver) {
+        if(driver == null){
+            closeDriverEditor();
+        } else{
+            autoPartForm.setVisible(false);
+            driverForm.setDriver(driver);
+            driverForm.setVisible(true);
         }
     }
 
@@ -117,15 +144,29 @@ public class MainUi extends LitTemplate {
         closeContactEditor();
     }
 
+    private void saveDriver(AddDriverForm.SaveEvent event){
+        driverService.saveDriver(event.getDriver());
+        closeDriverEditor();
+    }
+
     private void deleteAutoPart(AddPartForm.DeleteEvent event){
         autoPartService.deleteAutoPart(event.getAutoPart());
         refreshAutoPartsList();
         closeContactEditor();
     }
 
+    private void deleteDriver(AddDriverForm.DeleteEvent event){
+        driverService.deleteDriver(event.getDriver());
+        closeDriverEditor();
+    }
+
     private void closeContactEditor(){
-        form.setVisible(false);
+        autoPartForm.setVisible(false);
         grid.asSingleSelect().clear();
+    }
+
+    private void closeDriverEditor(){
+        driverForm.setVisible(false);
     }
 
     private void refreshAutoPartsList(){

@@ -7,6 +7,7 @@ import '@vaadin/horizontal-layout/src/vaadin-horizontal-layout.js';
 import '@vaadin/grid/src/vaadin-grid.js';
 import './add-part-form';
 import '@vaadin/button/src/vaadin-button.js';
+import './add-driver-form';
 
 @customElement('main-ui')
 export class MainUi extends LitElement {
@@ -32,12 +33,16 @@ export class MainUi extends LitElement {
     Resetuj filtry 
   </vaadin-button>
   <vaadin-button id="addPartButton" style="margin: var(--lumo-space-xs); margin-left: var(--lumo-space-xl);">
-   Dodaj część
+    Dodaj część 
+  </vaadin-button>
+  <vaadin-button id="addDriverButton">
+   Kierowcy
   </vaadin-button>
  </vaadin-horizontal-layout>
  <vaadin-horizontal-layout theme="spacing" style="height: 80%; width: 100%;">
   <vaadin-grid style="flex:2; flex-shrink: 0; flex-grow: 1; height: 100%;" id="grid" is-attached></vaadin-grid>
-  <add-part-form id="form" style="flex:1; flex-shrink: 0; flex-grow: 0.5;"></add-part-form>
+  <add-part-form id="AutoPartForm" style="flex:1; flex-shrink: 0; flex-grow: 0.5;"></add-part-form>
+  <add-driver-form id="DriverForm" style="flex:1; flex-shrink: 0; flex-grow: 0.5;"></add-driver-form>
  </vaadin-horizontal-layout>
 </vaadin-vertical-layout>
 `;

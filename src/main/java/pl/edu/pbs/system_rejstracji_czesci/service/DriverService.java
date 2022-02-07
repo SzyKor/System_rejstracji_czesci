@@ -20,4 +20,16 @@ public class DriverService{
     public Optional<Driver> getDriverById(Integer id){
         return driverRepository.findById(id);
     }
+
+    public Driver getAnyDriver(){
+        return driverRepository.findAll().get(0);
+    }
+
+    public void saveDriver(Driver driver){
+        driverRepository.save(driver);
+    }
+
+    public void deleteDriver(Driver driver){
+        driverRepository.delete(driver);
+    }
 }

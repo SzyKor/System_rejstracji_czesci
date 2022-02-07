@@ -27,13 +27,4 @@ public class Auto {
     private int autoHP;
     private float autoPrice;
     private boolean autoDamaged;
-//    @ManyToMany(
-//            cascade = CascadeType.ALL,
-//            fetch = FetchType.EAGER
-//    )
-//    @JoinTable(
-//            name = "auto_to_autopart",
-//            joinColumns = @JoinColumn(name = "autoId"),
-//            inverseJoinColumns = @JoinColumn(name = "autoPartId")
-//    )
 }

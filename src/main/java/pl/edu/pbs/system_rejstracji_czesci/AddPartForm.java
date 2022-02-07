@@ -91,6 +91,7 @@ public class AddPartForm extends LitTemplate {
     }
 
     public void setAutoPart(AutoPart autoPart){
+        partFromWho.setItems(driverService.getAllDrivers());
         binder.setBean(autoPart);
     }
 
@@ -142,6 +143,9 @@ public class AddPartForm extends LitTemplate {
 
         @Override
         public Driver convertToPresentation(Integer integer, ValueContext valueContext) {
+            if(integer == null){
+                return driverService.getAnyDriver();
+            }
             Optional<Driver> driver = driverService.getDriverById(integer);
             return driver.orElse(null);
         }
